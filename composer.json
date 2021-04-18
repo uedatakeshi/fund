@@ -1,0 +1,13 @@
+{
+    "require": {
+        "monolog/monolog": "^1.22"
+    },
+    "autoload": {
+        "psr-4": {
+            "Fund\\": "fund/"
+        }
+    },
+    "config": {
+        "secure-http": false
+    }
+}
