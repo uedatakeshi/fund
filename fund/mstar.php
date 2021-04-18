@@ -28,17 +28,7 @@ class Mstar
 
     public function getPrice($ms_code) {
         $url = $this->url . $ms_code;
-        $data = array();
-        if (preg_match('/^(\d{4})(\d{2})(\d{2})(\d+)$/', $ms_code, $regs)) {
-            $data['selectStdYearFrom'] = $regs[1];
-            $data['selectStdMonthFrom'] = $regs[2];
-            $data['selectStdDayFrom'] = $regs[3];
-        }
-        $data['selectStdYearTo'] = date("Y", mktime(0, 0, 0, date("m"), date("d") - 1, date("Y")));
-        $data['selectStdMonthTo'] = date("m", mktime(0, 0, 0, date("m"), date("d") - 1, date("Y")));
-        $data['selectStdDayTo'] = date("d", mktime(0, 0, 0, date("m"), date("d") - 1, date("Y")));
-
-        $this->log->error("ŠúŠÔ", $data);
+        $data = $this->_setFromTo($ms_code);
 
         $context = array(
             'http' => array(
@@ -50,9 +40,44 @@ class Mstar
 
         $html = file_get_contents($url, false, stream_context_create($context));
 
-        echo $html;
+        return $html;
+    }
 
+    public function _setFromTo($ms_code) {
 
+        $data = array();
+        if (preg_match('/^(\d{4})(\d{2})(\d{2})(\d+)$/', $ms_code, $regs)) {
+            $data['selectStdYearFrom'] = $regs[1];
+            $data['selectStdMonthFrom'] = $regs[2];
+            $data['selectStdDayFrom'] = $regs[3];
+        }
+
+        $to_date = date("Ymd", mktime(0, 0, 0, date("m"), date("d") - 1, date("Y")));
+        if (preg_match('/^(\d{4})(\d{2})(\d{2})$/', $to_date, $regs)) {
+            $data['selectStdYearTo'] = $regs[1];
+            $data['selectStdMonthTo'] = $regs[2];
+            $data['selectStdDayTo'] = $regs[3];
+        }
+        $this->log->error("ŠúŠÔ", $data);
+
+        return $data;
+
+    }
+
+    public function _strToArray($html) {
+        $lines = explode("\n", $html);
+        $i = 0;
+        $list = array();
+        foreach ($lines as $k => $v) {
+            list($price_date, $price) = explode(",", trim($v));
+            if ($price) {
+                $list[$i]['price_date'] = $price_date;
+                $list[$i]['price'] = $price;
+                $i++;
+            }
+        }
+
+        return $list;
 
     }
 }
