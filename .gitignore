@@ -6,6 +6,7 @@ data/
 log/
 *~
 *.bak
+*.swp
 *_bak
 *.gz
 
