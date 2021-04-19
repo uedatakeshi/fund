@@ -22,8 +22,8 @@ class Mstar
     }
 
     public function getName() {
-        echo $this->name;
         $this->log->error("リクエスト失敗", [1,2,3]);
+        return $this->name;
     }
 
     public function getPrice($ms_code) {
