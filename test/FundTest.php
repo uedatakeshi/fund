@@ -14,7 +14,7 @@ class FundTest extends TestCase
 
     public function setUp()
     {
-        $this->fund = new Fund\Mstar();
+        $this->fund = new Fund\Mstar("2018083102");
     }
 
     // テスト処理
@@ -26,8 +26,6 @@ class FundTest extends TestCase
 
     public function test_setFromTo()
     {
-        $ms_code = "2018083102";
-        $from = "";
         $to_date_time = mktime(0, 0, 0, date("m"), date("d") - 1, date("Y"));
         $data = [
             'selectStdYearFrom' => "2018",
@@ -37,13 +35,12 @@ class FundTest extends TestCase
             'selectStdMonthTo' => date("m", $to_date_time),
             'selectStdDayTo' => date("d", $to_date_time),
         ];
-        $this->assertEquals($data, $this->fund->_setFromTo($ms_code, $from));
+        $this->assertEquals($data, $this->fund->_setFromTo());
     }
 
     public function test_setFromTo_fromari()
     {
-        $ms_code = "2018083102";
-        $from = "2021-12-31";
+        $from = "20211231";
         $to_date_time = mktime(0, 0, 0, date("m"), date("d") - 1, date("Y"));
         $data = [
             'selectStdYearFrom' => "2021",
@@ -53,6 +50,6 @@ class FundTest extends TestCase
             'selectStdMonthTo' => date("m", $to_date_time),
             'selectStdDayTo' => date("d", $to_date_time),
         ];
-        $this->assertEquals($data, $this->fund->_setFromTo($ms_code, $from));
+        $this->assertEquals($data, $this->fund->_setFromTo($from));
     }
 }

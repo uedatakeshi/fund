@@ -12,10 +12,12 @@ class Mstar
     public $apikey = "a68e2d55951b4756a3131f7942974eeb";
     public $mode = "dev";
     public $url = "https://www.morningstar.co.jp/FundData/DownloadStdYmd.do?fnc=";
+    public $ms_code = "";
     public $log;
 
-    function __construct()
+    function __construct($ms_code)
     {
+        $this->ms_code = $ms_code;
         $this->log = new Logger('morning star');
         $this->log->pushHandler(new StreamHandler('./log/error.log', Logger::WARNING));
 		$this->getName();
@@ -26,9 +28,9 @@ class Mstar
         return $this->name;
     }
 
-    public function getPrice($ms_code) {
-        $url = $this->url . $ms_code;
-        $data = $this->_setFromTo($ms_code);
+    public function getPrice() {
+        $url = $this->url . $this->ms_code;
+        $data = $this->_setFromTo();
 
         $context = array(
             'http' => array(
@@ -43,16 +45,13 @@ class Mstar
         return $html;
     }
 
-    public function _setFromTo($ms_code, $from) {
+    public function _setFromTo($from = null) {
 
         $data = array();
-        if ($from) {
-            if (preg_match('/^(\d{4})\-(\d{2})\-(\d{2})$/', $from, $regs)) {
-                $data['selectStdYearFrom'] = $regs[1];
-                $data['selectStdMonthFrom'] = $regs[2];
-                $data['selectStdDayFrom'] = $regs[3];
-            }
-        } elseif (preg_match('/^(\d{4})(\d{2})(\d{2})(\d+)$/', $ms_code, $regs)) {
+        if (!$from) {
+            $from = $this->ms_code;
+        }
+        if (preg_match('/^(\d{4})(\d{2})(\d{2})/', $from, $regs)) {
             $data['selectStdYearFrom'] = $regs[1];
             $data['selectStdMonthFrom'] = $regs[2];
             $data['selectStdDayFrom'] = $regs[3];
