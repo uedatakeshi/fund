@@ -24,6 +24,27 @@ class FundTest extends TestCase
         $this->assertEquals($name, $this->fund->getName());
     }
 
+    public function test_strToArrayo()
+    {
+        $html = <<<END
+日付,価格
+20210419,30000
+20210420,30000
+END;
+        $list = [
+            [
+                'price_date' => '20210419',
+                'price' => '30000'
+            ],
+            [
+                'price_date' => '20210420',
+                'price' => '30000'
+            ]
+        ];
+
+        $this->assertEquals($list, $this->fund->_strToArray($html));
+    }
+
     public function test_setFromTo()
     {
         $to_date_time = mktime(0, 0, 0, date("m"), date("d") - 1, date("Y"));

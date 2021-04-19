@@ -9,8 +9,6 @@ use Monolog\Formatter\LineFormatter;
 class Mstar
 {
     public $name = "ueda";
-    public $apikey = "a68e2d55951b4756a3131f7942974eeb";
-    public $mode = "dev";
     public $url = "https://www.morningstar.co.jp/FundData/DownloadStdYmd.do?fnc=";
     public $ms_code = "";
     public $log;
@@ -63,19 +61,18 @@ class Mstar
             $data['selectStdMonthTo'] = $regs[2];
             $data['selectStdDayTo'] = $regs[3];
         }
-        $this->log->error("ŠúŠÔ", $data);
+        //$this->log->error("ŠúŠÔ", $data);
 
         return $data;
-
     }
 
     public function _strToArray($html) {
         $lines = explode("\n", $html);
         $i = 0;
-        $list = array();
+        $list = [];
         foreach ($lines as $k => $v) {
             list($price_date, $price) = explode(",", trim($v));
-            if ($price) {
+            if (preg_match('/^\d+$/', $price)) {
                 $list[$i]['price_date'] = $price_date;
                 $list[$i]['price'] = $price;
                 $i++;
@@ -83,6 +80,5 @@ class Mstar
         }
 
         return $list;
-
     }
 }
