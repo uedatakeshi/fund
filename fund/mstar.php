@@ -18,7 +18,7 @@ class Mstar
     {
         $this->log = new Logger('morning star');
         $this->log->pushHandler(new StreamHandler('./log/error.log', Logger::WARNING));
-		//$this->getName();
+		$this->getName();
     }
 
     public function getName() {
@@ -43,10 +43,16 @@ class Mstar
         return $html;
     }
 
-    public function _setFromTo($ms_code) {
+    public function _setFromTo($ms_code, $from) {
 
         $data = array();
-        if (preg_match('/^(\d{4})(\d{2})(\d{2})(\d+)$/', $ms_code, $regs)) {
+        if ($from) {
+            if (preg_match('/^(\d{4})\-(\d{2})\-(\d{2})$/', $from, $regs)) {
+                $data['selectStdYearFrom'] = $regs[1];
+                $data['selectStdMonthFrom'] = $regs[2];
+                $data['selectStdDayFrom'] = $regs[3];
+            }
+        } elseif (preg_match('/^(\d{4})(\d{2})(\d{2})(\d+)$/', $ms_code, $regs)) {
             $data['selectStdYearFrom'] = $regs[1];
             $data['selectStdMonthFrom'] = $regs[2];
             $data['selectStdDayFrom'] = $regs[3];
