@@ -14,35 +14,22 @@ class DatabaseTest extends TestCase
 
     public function setUp()
     {
-        $this->fund = new Fund\Mstar("2018083102");
+        $this->conn = new Fund\Database();
     }
 
     // テスト処理
-    public function testGetName()
+    public function testGetLatestPrice()
     {
-        $name = "ueda";
-        $this->assertEquals($name, $this->fund->getName());
+        $ms_code = "2017011006";
+        $price = ['price_date' => "2021-04-20", 'price' => 19000];
+        $this->assertEquals($price, $this->conn->getLatestPrice($ms_code));
     }
 
-    public function test_strToArrayo()
+    // 配列からインサートする
+    public function testInsertPrice()
     {
-        $html = <<<END
-日付,価格
-20210419,30000
-20210420,30000
-END;
-        $list = [
-            [
-                'price_date' => '20210419',
-                'price' => '30000'
-            ],
-            [
-                'price_date' => '20210420',
-                'price' => '30000'
-            ]
-        ];
-
-        $this->assertEquals($list, $this->fund->_strToArray($html));
+        $price[] = ['ms_code' => '2017011006', 'price_date' => "2020-12-10", 'price' => 29000];
+        $this->assertTrue($this->conn->insertPrice($price));
     }
 
 }
